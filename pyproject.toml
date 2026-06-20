@@ -42,7 +42,7 @@ clipboard = ["pyperclip>=1.11.0"]
 [project.urls]
 Homepage = "https://github.com/NecRaul/lain-shorten"
 Documentation = "https://github.com/NecRaul/lain-shorten#readme"
-Repository = "https://github.com/NecRaul/lain-shorten"
+Repository = "https://github.com/NecRaul/lain-shorten.git"
 Issues = "https://github.com/NecRaul/lain-shorten/issues"
 
 [project.scripts]
@@ -51,11 +51,11 @@ lain-shorten = "lain_shorten.cli:main"
 [dependency-groups]
 dev = [
   "pyperclip>=1.11.0",
-  "ruff>=0.14.14",
-  "ty>=0.0.14",
-  "pre-commit>=4.5.1",
+  "ruff>=0.15.17",
+  "ty>=0.0.50",
+  "pre-commit>=4.6.0",
   "debugpy>=1.8.20",
-  "pytest>=9.0.2",
+  "pytest>=9.1.0",
 ]
 
 [tool.uv]
