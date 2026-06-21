@@ -1,3 +1,4 @@
-from .shorten import shorten_url
+from . import shortener
+from .version import __version__
 
-__all__ = ["shorten_url"]
+__all__ = ["shortener", "__version__"]
