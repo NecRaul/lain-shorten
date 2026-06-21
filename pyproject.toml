@@ -5,7 +5,7 @@ build-backend = "uv_build"
 [project]
 name = "lain-shorten"
 version = "1.19"
-description = "A simple CLI URL shortener using s.lain.la API, with optional clipboard copy."
+description = "A simple CLI URL shortener for multiple url-shortening services, with optional clipboard copy."
 readme = "README.md"
 authors = [{ name = "NecRaul", email = "necraul@kuroneko.dev" }]
 license = "LGPL-2.1-only"
