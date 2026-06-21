@@ -1,11 +1,14 @@
 import unittest
 
-from lain_shorten.shorten import ensure_url_has_scheme, is_valid_url
+from lain_shorten.util import ensure_url_has_scheme, is_valid_url
 
 
 class UrlValidationTests(unittest.TestCase):
     def test_protocol_less_domain_is_normalized(self):
-        self.assertEqual(ensure_url_has_scheme("example.com"), "http://example.com")
+        self.assertEqual(
+            ensure_url_has_scheme("example.com"),
+            "http://example.com",
+        )
 
     def test_supported_network_urls(self):
         supported_urls = [
