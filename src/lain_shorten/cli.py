@@ -10,6 +10,7 @@ from . import __version__, shortener
 def main():
     allowed_shorteners = {
         "lainla": "LainLa",
+        "wildlain": "WildLain",
     }
     parser = argparse.ArgumentParser(
         description="Shorten URLs using lain.la API",
