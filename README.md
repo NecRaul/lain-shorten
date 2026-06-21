@@ -1,6 +1,6 @@
 # lain-shorten
 
-A simple CLI URL shortener using `s.lain.la` API, with optional clipboard copy.
+A simple CLI URL shortener for multiple url-shortening services, with optional clipboard copy.
 
 ## Installation
 
@@ -68,11 +68,17 @@ Simply provide a URL, and the tool will automatically handle protocol validation
 Use `--open` to open each generated short URL in your default browser right after shortening. This makes it easy to verify each format resolves as expected in a real browser session.
 
 ```sh
-# Shorten a URL
+# Shorten a URL (default shortener: lainla)
 lain-shorten https://kuroneko.dev
 
 # Protocol-less (automatically prepends http://)
 lain-shorten kuroneko.dev
+
+# Select a specific shortener
+lain-shorten --host wildlain https://github.com/NecRaul
+
+# Shorten using every available host
+lain-shorten --host all https://gist.github.com/NecRaul
 
 # irc
 lain-shorten irc://irc.libera.chat/#archlinux
@@ -91,15 +97,21 @@ lain-shorten "magnet:?xt=urn:btih:0123456789abcdef0123456789abcdef01234567&dn=Ex
 
 # Open shortened URLs using the default browser
 lain-shorten --open \
-http://kuroneko.dev \
-ircs://irc.libera.chat:6697/#archlinux \
-xmpp:necraul@kuroneko.dev \
-tel:+15551234567
+    http://kuroneko.dev \
+    ircs://irc.libera.chat:6697/#archlinux \
+    xmpp:necraul@kuroneko.dev \
+    tel:+15551234567
 
 # Display help and version
 lain-shorten -h
 lain-shorten -v
 ```
+
+## Supported Shorteners
+
+- [s.lain.la](https://s.lain.la/)
+- [s.wildla.in](https://s.wildla.in/)
+
 
 ## Supported Schemes
 
@@ -121,7 +133,7 @@ lain-shorten -v
 
 ## How it works
 
-The `s.lain.la` service allows shortening URLs via a `POST` request.
+Supported services allow shortening URLs via an `HTTP` request.
 
 This tool automates the process to avoid typing long `curl` strings.
 
