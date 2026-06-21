@@ -2,24 +2,6 @@ from urllib.parse import parse_qs, urlparse
 
 import requests
 
-NETWORK_URL_SCHEMES = {
-    "http",
-    "https",
-    "irc",
-    "ircs",
-    "ssh",
-}
-
-HANDLE_SCHEMES = {
-    "mailto",
-    "xmpp",
-}
-
-PHONE_SCHEMES = {
-    "sms",
-    "tel",
-}
-
 
 def ensure_url_has_scheme(url):
     if urlparse(url).scheme:
@@ -33,24 +15,41 @@ def ensure_url_has_scheme(url):
 def is_valid_url(url):
     try:
         result = urlparse(url)
-        scheme = result.scheme
-
-        if scheme in NETWORK_URL_SCHEMES:
-            return bool(result.netloc)
-
-        if scheme in HANDLE_SCHEMES:
-            return bool(result.path and "@" in result.path)
-
-        if scheme in PHONE_SCHEMES:
-            return bool(result.path)
-
-        if scheme == "magnet":
-            query = parse_qs(result.query)
-            return bool(query.get("xt"))
-
-        return False
+        validator = VALIDATORS.get(result.scheme)
+        return validator(result) if validator else False
     except ValueError:
         return False
+
+
+def validate_network(result):
+    return bool(result.netloc)
+
+
+def validate_handle(result):
+    return bool(result.path and "@" in result.path)
+
+
+def validate_phone(result):
+    return bool(result.path)
+
+
+def validate_magnet(result):
+    query = parse_qs(result.query)
+    return bool(query.get("xt"))
+
+
+VALIDATORS = {
+    "http": validate_network,
+    "https": validate_network,
+    "irc": validate_network,
+    "ircs": validate_network,
+    "ssh": validate_network,
+    "mailto": validate_handle,
+    "xmpp": validate_handle,
+    "sms": validate_phone,
+    "tel": validate_phone,
+    "magnet": validate_magnet,
+}
 
 
 def shorten_url(url):
