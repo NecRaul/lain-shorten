@@ -123,6 +123,60 @@ lain-shorten -v
 - `sms://` and `tel://` links.
 - `magnet:` torrent links.
 
+## Configuration
+
+lain-shorten supports a JSON configuration file to set a default shortener and whether to open shortened URLs in your browser. You can create a default config, inspect the effective configuration, and override or ignore the config file at runtime.
+
+- Default path
+  - Linux/BSD: `$XDG_CONFIG_HOME/necraul/lain-shorten.json` or `~/.config/necraul/lain-shorten.json`
+  - MacOS: `~/Library/Application Support/necraul/lain-shorten.json`
+  - Windows: `%APPDATA%/necraul/lain-shorten.json`
+- Basic structure
+  - `default_shortener`: shortener used when `--shortener` flag is omitted (default: `"lainla"`).
+  - `open_urls`: whether to open each generated short URL in your default browser (default: `false`).
+
+```json
+{
+  "default_shortener": "lainla",
+  "open_urls": false
+}
+```
+
+```sh
+# Create a default configuration file at the default path
+lain-shorten --init-config
+
+# Create a default configuration file at a custom path
+lain-shorten --init-config config.json
+
+# Show the effective configuration (defaults merged with the default config file)
+lain-shorten --show-config
+
+# Create a default configuration file at the default path and print it
+lain-shorten --init-config --show-config
+
+# Create a default configuration file at a custom path and print it
+lain-shorten --init-config /path/to/config.json --show-config
+
+# Show the effective configuration (defaults merged with the custom config file)
+lain-shorten --config config.json --show-config
+
+# Shorten URLs using the config file's default_shortener (no --shortener needed)
+lain-shorten https://kuroneko.dev/
+
+# Override the config file's default_shortener
+lain-shorten --shortener wildlain https://github.com/NecRaul
+
+# Use a custom configuration file
+lain-shorten --config /path/to/config.json https://gist.github.com/NecRaul
+
+# Ignore the configuration file and use only CLI flags
+lain-shorten --no-config https://kuroneko.dev/
+
+# Open shortened URLs in your browser (CLI flag overrides config)
+lain-shorten --open https://github.com/NecRaul/
+```
+
 ## Dependencies
 
 - [requests](https://github.com/psf/requests): send the API request for shortening.
