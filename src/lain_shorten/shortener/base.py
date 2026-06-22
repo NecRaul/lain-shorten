@@ -2,8 +2,8 @@ import time
 
 import requests
 
-from ..util import ensure_url_has_scheme, is_valid_url
-from ..version import __version__
+from lain_shorten.util import ensure_url_has_scheme, is_valid_url
+from lain_shorten.version import __version__
 
 
 class BaseShortener:

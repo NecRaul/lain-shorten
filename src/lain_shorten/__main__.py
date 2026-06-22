@@ -3,7 +3,7 @@
 # Execute with
 # $ python3 -m lain_shorten
 
-from .cli import main
+from lain_shorten.cli import main
 
 if __name__ == "__main__":
     raise SystemExit(main())

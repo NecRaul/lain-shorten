@@ -1,4 +1,4 @@
-from .base import BaseShortener
+from lain_shorten.shortener.base import BaseShortener
 
 
 class LainLaShortener(BaseShortener):

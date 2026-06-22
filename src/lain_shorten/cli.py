@@ -5,9 +5,7 @@ import webbrowser
 
 import requests
 
-from lain_shorten.util import is_valid_url
-
-from . import __version__, config, shortener
+from lain_shorten import __version__, config, shortener, util
 
 
 def main():
@@ -98,7 +96,7 @@ def main():
             try:
                 shortener_instance = shortener_class()
                 url_short = shortener_instance.shorten(url_full)
-                if is_valid_url(url_short):
+                if util.is_valid_url(url_short):
                     print(f"{url_full}: {url_short}")
                     shortened_urls.append(url_short)
                 else:
