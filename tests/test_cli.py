@@ -26,8 +26,8 @@ class CliTests(unittest.TestCase):
         ):
             cli.main()
 
-            self.assertIn(shortened_url, stdout.getvalue())
-            self.assertIn("URL(s) copied to clipboard", stderr.getvalue())
+        self.assertIn(shortened_url, stdout.getvalue())
+        self.assertIn("URL(s) copied to clipboard", stderr.getvalue())
 
     def test_opens_browser_when_flag_is_used(self):
         shortened_url = "http://short.url/abc123"
@@ -49,7 +49,7 @@ class CliTests(unittest.TestCase):
         ):
             cli.main()
 
-            fake_webbrowser.open_new_tab.assert_called_once_with(shortened_url)
+        fake_webbrowser.open_new_tab.assert_called_once_with(shortened_url)
 
     def test_invalid_url_prints_error_and_exits(self):
         invalid_response = "not-a-url"
@@ -69,11 +69,11 @@ class CliTests(unittest.TestCase):
         ):
             cli.main()
 
-            self.assertEqual(ctx.exception.code, 1)
-            self.assertIn(
-                "Error: API returned invalid format",
-                stderr.getvalue(),
-            )
+        self.assertEqual(ctx.exception.code, 1)
+        self.assertIn(
+            "Error: API returned invalid format",
+            stderr.getvalue(),
+        )
 
 
 if __name__ == "__main__":

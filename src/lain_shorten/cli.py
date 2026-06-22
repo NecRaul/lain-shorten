@@ -1,10 +1,13 @@
 import argparse
+import json
 import sys
 import webbrowser
 
 import requests
 
-from . import __version__, shortener
+from lain_shorten.util import is_valid_url
+
+from . import __version__, config, shortener
 
 
 def main():
@@ -13,45 +16,89 @@ def main():
         "wildlain": "WildLain",
     }
     parser = argparse.ArgumentParser(
-        description="Shorten URLs using lain.la API",
-        formatter_class=argparse.ArgumentDefaultsHelpFormatter,
-        epilog="Example: %(prog)s https://kuroneko.dev/",
+        description="Shorten URLs using various URL shorteners",
+        formatter_class=argparse.HelpFormatter,
+        epilog="Example: %(prog)s --shortener lainla https://kuroneko.dev/ https://github.com/NecRaul",
     )
     parser.add_argument("-v", "--version", action="version", version=__version__)
+    config_group = parser.add_mutually_exclusive_group()
+    config_group.add_argument("--config", help="load configuration from file")
+    config_group.add_argument(
+        "--no-config", action="store_true", help="ignore configuration file"
+    )
+    config_group.add_argument(
+        "--init-config",
+        nargs="?",
+        const=None,
+        default=argparse.SUPPRESS,
+        help="create default configuration file",
+    )
+    parser.add_argument(
+        "--show-config",
+        action="store_true",
+        help="show effective configuration and exit",
+    )
     parser.add_argument(
         "--shortener",
         nargs="?",
-        default="lainla",
+        default=argparse.SUPPRESS,
         choices=[*allowed_shorteners.keys(), "all"],
-        help="host to use for uploading",
+        help="shortener to use",
     )
     parser.add_argument(
         "-o",
         "--open",
         action="store_true",
+        default=argparse.SUPPRESS,
         help="open each generated short URL in your default browser",
     )
-    parser.add_argument("urls", nargs="+", help="URL(s) to be shortened")
+    parser.add_argument("urls", nargs="*", default=[], help="URL(s) to be shortened")
 
     args = parser.parse_args()
 
-    if args.shortener == "all":
-        selected_shorteners = list(allowed_shorteners.keys())
-    else:
-        selected_shorteners = [args.shortener]
+    if hasattr(args, "init_config"):
+        path = config.save_config(config.DEFAULT_CONFIG, args.init_config)
+        print(f"Config created at {path}", file=sys.stderr)
+        if args.show_config:
+            print(json.dumps(config.DEFAULT_CONFIG, indent=2))
+        return
+
+    cfg = config.load_effective_config(path=args.config, no_config=args.no_config)
+
+    if args.show_config:
+        print(json.dumps(cfg, indent=2))
+        return
+
+    shortener_service = getattr(args, "shortener", None) or cfg.get(
+        "default_shortener", "lainla"
+    )
+
+    if shortener_service not in allowed_shorteners and shortener_service != "all":
+        parser.error(f"Invalid shortener in config: {shortener_service}")
+
+    if not args.urls:
+        parser.error("no URL(s) specified")
+
+    selected_shorteners = (
+        list(allowed_shorteners.keys())
+        if shortener_service == "all"
+        else [shortener_service]
+    )
 
     shortened_urls = []
     has_error = False
 
     for shortener_name in selected_shorteners:
         shortener_class_name = f"{allowed_shorteners[shortener_name]}Shortener"
+        if not hasattr(shortener, shortener_class_name):
+            continue
         shortener_class = getattr(shortener, shortener_class_name)
 
         for url_full in args.urls:
             try:
                 shortener_instance = shortener_class()
                 url_short = shortener_instance.shorten(url_full)
-                if url_short.startswith("http"):
+                if is_valid_url(url_short):
                     print(f"{url_full}: {url_short}")
                     shortened_urls.append(url_short)
                 else:
@@ -80,7 +127,7 @@ def main():
         except Exception:
             pass
 
-        if args.open:
+        if hasattr(args, "open") or cfg.get("open_urls", False):
             for url_short in shortened_urls:
                 webbrowser.open_new_tab(url_short)
 
