@@ -6,7 +6,7 @@ A simple CLI URL shortener for multiple url-shortening services, with optional c
 
 ### Via PyPI (Recommended)
 
-You have the option to choose between the standard version (lain-shorten) or the desktop version (lain-shorten[clipboard]), which adds clipboard support for auto-copying links.
+You have the option to choose between the standard version (`lain-shorten`) or the desktop version (`lain-shorten[clipboard]`), which adds clipboard support for auto-copying links.
 
 > [!NOTE]
 > For brevity, the examples below use the desktop version.
@@ -25,7 +25,7 @@ pipx install "lain-shorten[clipboard]"
 
 #### With uv (Best)
 
-The most efficient way to install or run the shortener.
+The most efficient way to install or run `lain-shorten`.
 
 ```sh
 # Permanent isolated installation
@@ -65,7 +65,7 @@ uv run pytest tests
 
 Simply provide a URL, and the tool will automatically handle protocol validation and formatting.
 
-Use `--open` to open each generated short URL in your default browser right after shortening. This makes it easy to verify each format resolves as expected in a real browser session.
+Use `--open` to open each generated short URL in your default browser right after shortening. This makes it easy to verify each link resolves as expected in a real browser session.
 
 ```sh
 # Shorten a URL (default shortener: lainla)
@@ -75,10 +75,10 @@ lain-shorten https://kuroneko.dev
 lain-shorten kuroneko.dev
 
 # Select a specific shortener
-lain-shorten --host wildlain https://github.com/NecRaul
+lain-shorten --shortener wildlain https://github.com/NecRaul
 
-# Shorten using every available host
-lain-shorten --host all https://gist.github.com/NecRaul
+# Shorten using every available shortener
+lain-shorten --shortener all https://gist.github.com/NecRaul
 
 # irc
 lain-shorten irc://irc.libera.chat/#archlinux
@@ -107,25 +107,22 @@ lain-shorten -h
 lain-shorten -v
 ```
 
-## Supported Shorteners
+### Options
 
-- [s.lain.la](https://s.lain.la/)
-- [s.wildla.in](https://s.wildla.in/)
+```sh
+    --shortener       SHORTENER             URL shortening service to use (default: lainla)
+    --open            -                     Open each shortened URL in your default browser after shortening
+    --config          PATH                  Path to a custom configuration file
+    --init-config     [PATH]                Create a default configuration file at the default or given path
+    --show-config     -                     Print the effective configuration after merging defaults and config file
+    --no-config       -                     Ignore the configuration file and use only CLI flags
+-h, --help            -                     Show help and exit
+-v, --version         -                     Show version and exit
+```
 
+### Configuration
 
-## Supported Schemes
-
-- `http://` and `https://` links.
-- protocol-less domains (automatically normalized to `http://`).
-- `irc://` and `ircs://` links.
-- `ssh://` links.
-- `mailto://` and `xmpp://` links.
-- `sms://` and `tel://` links.
-- `magnet:` torrent links.
-
-## Configuration
-
-lain-shorten supports a JSON configuration file to set a default shortener and whether to open shortened URLs in your browser. You can create a default config, inspect the effective configuration, and override or ignore the config file at runtime.
+`lain-shorten` supports a JSON configuration file to set a default shortener and whether to open shortened URLs in your browser. You can create a default config, inspect the effective configuration, and override or ignore the config file at runtime.
 
 - Default path
   - Linux/BSD: `$XDG_CONFIG_HOME/necraul/lain-shorten.json` or `~/.config/necraul/lain-shorten.json`
@@ -177,6 +174,22 @@ lain-shorten --no-config https://kuroneko.dev/
 lain-shorten --open https://github.com/NecRaul/
 ```
 
+## Supported Shorteners
+
+- [s.lain.la](https://s.lain.la/)
+- [s.wildla.in](https://s.wildla.in/)
+- [v.gd](https://v.gd/)
+
+## Supported Schemes
+
+- `http://` and `https://` links.
+- Protocol-less domains (automatically normalized to `http://`).
+- `irc://` and `ircs://` links.
+- `ssh://` links.
+- `mailto://` and `xmpp://` links.
+- `sms://` and `tel://` links.
+- `magnet:` torrent links.
+
 ## Dependencies
 
 - [requests](https://github.com/psf/requests): send the API request for shortening.
@@ -199,11 +212,11 @@ curl -d "url=https://kuroneko.dev" https://s.lain.la
 
 ### The lain-shorten way
 
-- Batch Processing: Shorten multiple URLs in a single command execution, saving time over individual manual requests.
-- Validation: Uses `urllib` to ensure the URL is formatted correctly.
-- API Request: Sends the `POST` request via `requests`.
-- Normalization: Automatically adds `http://` if missing.
-- Clipboard (Optional): If `pyperclip` is installed, the result is instantly copied to your clipboard.
+- Batch Processing: Shorten multiple URLs in a single command, iterating through each one and printing results as they come in rather than waiting for the entire batch to finish.
+- Validation: Uses `urllib` to parse and validate each URL before sending it, catching malformed input early and normalizing protocol-less domains to `http://` so the request always reaches the service in a well-formed state.
+- API Request: Sends an `HTTP` request via `requests`, then reads the plain-text or JSON response depending on the service.
+- Normalization: Extracts a clean short URL from whatever format the service returns so the output is consistent across different shorteners.
+- Clipboard (Optional): If `pyperclip` is installed, each resulting URL is copied to the clipboard immediately after shortening so it is ready to paste without any extra steps.
 
 ## Special thanks
 
