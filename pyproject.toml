@@ -43,6 +43,7 @@ clipboard = ["pyperclip>=1.11.0"]
 Homepage = "https://github.com/NecRaul/lain-shorten"
 Documentation = "https://github.com/NecRaul/lain-shorten#readme"
 Repository = "https://github.com/NecRaul/lain-shorten.git"
+Download = "https://github.com/NecRaul/lain-shorten/releases"
 Issues = "https://github.com/NecRaul/lain-shorten/issues"
 
 [project.scripts]
