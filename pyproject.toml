@@ -4,7 +4,7 @@ build-backend = "uv_build"
 
 [project]
 name = "lain-shorten"
-version = "1.20"
+version = "1.21"
 description = "A simple CLI URL shortener for multiple url-shortening services, with optional clipboard copy."
 readme = "README.md"
 authors = [{ name = "NecRaul", email = "necraul@kuroneko.dev" }]
