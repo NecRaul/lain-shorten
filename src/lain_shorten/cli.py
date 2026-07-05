@@ -12,6 +12,7 @@ def main():
     allowed_shorteners = {
         "lainla": "LainLa",
         "wildlain": "WildLain",
+        "vgd": "Vgd",
     }
     parser = argparse.ArgumentParser(
         description="Shorten URLs using various URL shorteners",
