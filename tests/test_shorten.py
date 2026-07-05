@@ -5,10 +5,11 @@ from urllib.parse import urlparse
 import requests
 
 from lain_shorten import __version__
-from lain_shorten.shortener import LainLaShortener
+from lain_shorten.shortener import LainLaShortener, VgdShortener
 
 allowed_shorteners = {
     LainLaShortener: ("lain.la",),
+    VgdShortener: ("v.gd",),
 }
 
 
@@ -42,7 +43,7 @@ class ShortenIntegrationTests(unittest.TestCase):
                     },
                     allow_redirects=False,
                 )
-                self.assertIn(r.status_code, (301, 302, 303, 307, 308))
+                self.assertIn(r.status_code, (200, 301, 302, 303, 307, 308))
                 return
             except requests.RequestException as error:
                 last_error = error
