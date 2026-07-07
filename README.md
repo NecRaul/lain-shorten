@@ -179,6 +179,7 @@ lain-shorten --open https://github.com/NecRaul/
 - [s.lain.la](https://s.lain.la/)
 - [s.wildla.in](https://s.wildla.in/)
 - [v.gd](https://v.gd/)
+- [1pt.co](https://1pt.co/)
 
 ## Supported Schemes
 
