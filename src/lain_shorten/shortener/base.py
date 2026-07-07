@@ -41,11 +41,13 @@ class BaseShortener:
         finally:
             cls.last_request_time = time.monotonic()
 
-        result = response.text.strip()
+        return cls.parse_response(response)
 
+    @classmethod
+    def parse_response(cls, response):
+        result = response.text.strip()
         if not result:
             raise ValueError("Server returned an empty response.")
-
         return result
 
     @classmethod

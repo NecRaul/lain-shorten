@@ -13,6 +13,7 @@ def main():
         "lainla": "LainLa",
         "wildlain": "WildLain",
         "vgd": "Vgd",
+        "onepoint": "OnePoint",
     }
     parser = argparse.ArgumentParser(
         description="Shorten URLs using various URL shorteners",
